@@ -17,12 +17,12 @@ output "hcp_vault_admin_token" {
 }
 
 output "hcp_vault_namespace" {
-  value       = hcp_vault_cluster.vault.namespace
+  value       = hcp_vault_cluster.vault.hcp_vault_namespace
   description = "Namespace of HCP Vault"
 }
 
 output "hcp_vault_cluster_id"{
-  value = hcp_vault_cluster.vault.cluster_id
+  value = hcp_vault_cluster.vault.hcp_vault_cluster_id
 }
 
 output "product_database_hostname" {
