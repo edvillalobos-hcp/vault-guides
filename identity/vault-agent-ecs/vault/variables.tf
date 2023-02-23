@@ -32,10 +32,10 @@ variable "region" {
 }
 
 
-variable "product_database_hostname" {
-  type        = string
-  description = "Amazon RDS database hostname"
-}
+# variable "product_database_hostname" {
+#   type        = string
+#   description = "Amazon RDS database hostname"
+# }
 
 variable "product_database_port" {
   type        = number
@@ -43,22 +43,22 @@ variable "product_database_port" {
   default     = 5432
 }
 
-variable "product_database_username" {
-  type        = string
-  description = "Amazon RDS database username"
-}
+# variable "product_database_username" {
+#   type        = string
+#   description = "Amazon RDS database username"
+# }
 
 
-variable "product_database_password" {
-  type        = string
-  description = "Amazon RDS database password"
-  sensitive   = true
-}
+# variable "product_database_password" {
+#   type        = string
+#   description = "Amazon RDS database password"
+#   sensitive   = true
+# }
 
-variable "product_api_efs_access_point_arn" {
-  type        = string
-  description = "ARN for EFS Access Point of product-api"
-}
+# variable "product_api_efs_access_point_arn" {
+#   type        = string
+#   description = "ARN for EFS Access Point of product-api"
+# }
 
 variable "hcp_vault_cluster_id" {
   type        = string

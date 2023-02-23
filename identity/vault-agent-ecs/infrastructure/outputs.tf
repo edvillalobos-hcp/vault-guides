@@ -16,6 +16,15 @@ output "hcp_vault_admin_token" {
   sensitive   = true
 }
 
+output "hcp_vault_namespace" {
+  value       = hcp_vault_cluster.vault.namespace
+  description = "Namespace of HCP Vault"
+}
+
+output "hcp_vault_cluster_id"{
+  value = hcp_vault_cluster.vault.cluster_id
+}
+
 output "product_database_hostname" {
   value       = aws_lb.nlb.dns_name
   description = "Load balancer hostname for product-db hosted on ECS cluster"
