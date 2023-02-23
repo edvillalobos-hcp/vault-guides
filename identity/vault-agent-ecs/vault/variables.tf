@@ -32,24 +32,24 @@ variable "region" {
 }
 
 
-variable "product_db_hostname" {
+variable "product_database_hostname" {
   type        = string
   description = "Amazon RDS database hostname"
 }
 
-variable "product_db_port" {
+variable "product_database_port" {
   type        = number
   description = "Amazon RDS database port"
   default     = 5432
 }
 
-variable "product_db_username" {
+variable "product_database_username" {
   type        = string
   description = "Amazon RDS database username"
 }
 
 
-variable "product_db_password" {
+variable "product_database_password" {
   type        = string
   description = "Amazon RDS database password"
   sensitive   = true

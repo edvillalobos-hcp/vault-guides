@@ -9,7 +9,7 @@ resource "vault_database_secret_backend_connection" "postgres" {
   allowed_roles = ["*"]
 
   postgresql {
-    connection_url = "postgresql://${var.product_db_username}:${var.product_db_password}@${var.product_db_hostname}:${var.product_db_port}/products?sslmode=disable"
+    connection_url = "postgresql://${local.product_database_username}:${local.product_database_password}@${local.product_database_hostname}:${var.product_database_port}/products?sslmode=disable"
   }
 }
 
