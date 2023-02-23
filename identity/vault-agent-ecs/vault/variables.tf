@@ -1,13 +1,8 @@
-variable "TFC_ORGANIZATION" {
-  type        = string
-  description = "TFC Organization for remote state of infrastructure"
-}
-
 data "terraform_remote_state" "vault-agent-ecs-infra" {
   backend = "remote"
 
   config = {
-    organization = var.TFC_ORGANIZATION
+    organization = "Demo-Org-EV"
     workspaces = {
       name = "vault-agent-ecs-infra"
     }
