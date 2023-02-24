@@ -141,6 +141,6 @@ product_api_role      = data.terraform_remote_state.vault-agent-ecs-vault.output
 
 }
 
-variable product_db_vault_path {}
-variable product_api_role_arn {}
-variable product_api_role {}
+# variable product_db_vault_path {}
+# variable product_api_role_arn {}
+# variable product_api_role {}
