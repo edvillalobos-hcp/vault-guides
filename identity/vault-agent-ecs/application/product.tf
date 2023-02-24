@@ -18,12 +18,12 @@ locals {
 module "product_api" {
   source          = "../modules/vault-task/ecs"
   family          = local.product_api_name
-  vault_address   = var.vault_address
-  vault_namespace = var.vault_namespace
+  vault_address   = local.hcp_vault_public_endpoint
+  vault_namespace = local.hcp_vault_namespace
 
   vault_agent_template = base64encode(templatefile("templates/conf.json", {
-    vault_database_creds_path = var.product_db_vault_path,
-    database_address          = var.product_db_hostname,
+    vault_database_creds_path = local.product_db_vault_path,
+    database_address          = local.product_database_hostname,
     products_api_port         = local.product_api_port
   }))
 
@@ -31,17 +31,17 @@ module "product_api" {
   vault_agent_exit_after_auth    = false
 
   task_role = {
-    arn = var.product_api_role_arn
-    id  = var.product_api_role
+    arn = local.product_api_role_arn
+    id  = local.product_api_role
   }
 
   execution_role = {
-    arn = var.product_api_role_arn
-    id  = var.product_api_role
+    arn = local.product_api_role_arn
+    id  = local.product_api_role
   }
 
-  efs_file_system_id  = var.efs_file_system_id
-  efs_access_point_id = var.product_api_efs_access_point_id
+  efs_file_system_id  = local.efs_file_system_id
+  efs_access_point_id = local.product_api_efs_access_point_id
   log_configuration   = local.product_log_config
   container_definitions = [{
     name      = local.product_api_name
@@ -73,14 +73,14 @@ resource "aws_ecs_service" "product_api" {
   task_definition = module.product_api.task_definition_arn
   desired_count   = 1
   network_configuration {
-    subnets         = var.private_subnets
-    security_groups = [var.ecs_security_group, var.database_security_group]
+    subnets         = local.private_subnets
+    security_groups = [local.ecs_security_group, local.database_security_group]
   }
   launch_type            = var.enable_ec2_launch_type ? "EC2" : "FARGATE"
   propagate_tags         = "TASK_DEFINITION"
   enable_execute_command = true
   load_balancer {
-    target_group_arn = var.target_group_arn
+    target_group_arn = local.target_group_arn
     container_name   = "product-api"
     container_port   = 9090
   }
