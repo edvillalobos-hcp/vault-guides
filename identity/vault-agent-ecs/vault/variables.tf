@@ -89,7 +89,7 @@ locals {
   product_api_efs_access_point_id         = data.terraform_remote_state.vault-agent-ecs-infra.outputs.product_api_efs_access_point_id
   product_api_endpoint       = data.terraform_remote_state.vault-agent-ecs-infra.outputs.product_api_endpoint
   target_group_arn          = data.terraform_remote_state.vault-agent-ecs-infra.outputs.target_group_arn
-  hcp_vault_cluster_id      = var.hcp_vault_cluster_id == "" ? data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_cluster : var.hcp_vault_cluster_id
+  hcp_vault_cluster_id      = var.hcp_vault_cluster_id == "" ? data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_cluster_id : var.hcp_vault_cluster_id
   hcp_vault_public_endpoint  = data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_public_endpoint
   hcp_vault_private_endpoint = data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_private_endpoint
   hcp_vault_namespace       = data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_namespace

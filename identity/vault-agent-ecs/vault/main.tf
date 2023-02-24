@@ -18,4 +18,8 @@ provider "aws" {
   }
 }
 
-provider "vault" {}
+provider "vault" {
+  address   = local.hcp_vault_public_endpoint
+  token     = local.hcp_vault_admin_token
+  namespace = local.hcp_vault_namespace
+}
