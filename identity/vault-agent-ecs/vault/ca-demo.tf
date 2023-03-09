@@ -23,8 +23,8 @@ resource "vault_pki_secret_backend_root_cert" "root_cert" {
 
 resource "vault_pki_secret_backend_config_urls" "root_url" {
   backend = vault_mount.root_ca.path
-  issuing_certificates = [ "${data.tfe_outputs.vault.values.vault_public_addr}/v1/${vault_mount.root_ca.path}/ca" ]
-  crl_distribution_points = [ "${data.tfe_outputs.vault.values.vault_public_addr}/v1/${vault_mount.root_ca.path}/crl" ]
+  issuing_certificates = [ "${local.hcp_vault_public_endpoint}/v1/${vault_mount.root_ca.path}/ca" ]
+  crl_distribution_points = [ "${local.hcp_vault_public_endpoint}/v1/${vault_mount.root_ca.path}/crl" ]
 }
 
 resource "vault_pki_secret_backend_crl_config" "crl_config" {
@@ -56,7 +56,19 @@ resource "vault_pki_secret_backend_role" "role" {
 
 resource "vault_policy" "pki" {
   name   = "cert-pki"
-  policy = file("cert-pki.hcl")
+  policy = <<EOT
+path "pki_root/issue/test" {
+    capabilities = [ "create", "update" ]
+}
+
+path "auth/token/renew" {
+  capabilities = ["update"]
+}
+
+path "auth/token/renew-self" {
+  capabilities = ["update"]
+}
+EOT
 }
 
 resource "vault_auth_backend" "approle" {
