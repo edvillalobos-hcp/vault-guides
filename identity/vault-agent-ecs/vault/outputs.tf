@@ -13,3 +13,8 @@ output "product_api_role" {
   value       = vault_aws_auth_backend_role.ecs.role
   description = "Vault role name for product-api"
 }
+
+output "aws_backend"{
+  value = vault_auth_backend.aws.path
+  description = "Vault aws backend path"
+}
