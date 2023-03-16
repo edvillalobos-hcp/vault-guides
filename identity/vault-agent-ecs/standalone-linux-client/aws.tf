@@ -24,7 +24,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "vault-client" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
-  subnet_id                   = local.public_subnets
+  subnet_id                   = local.public_subnets[0]
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.testing.id]
   associate_public_ip_address = true
