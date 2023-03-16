@@ -51,5 +51,7 @@ data "template_file" "vault-client" {
     tpl_vault_zip_file     = var.vault_zip_file
     tpl_vault_service_name = "vault-${var.environment_name}"
     tpl_vault_server_addr  = local.hcp_vault_public_endpoint
+    tpl_role_id = local.pki_role_id
+    tpl_role_secret = local.pki_secret_id
   }
 }

@@ -152,10 +152,18 @@ logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 sudo tee -a /etc/environment <<EOF
 VAULT_ADDR="http://${tpl_vault_server_addr}:8200"
 VAULT_SKIP_VERIFY=true
+VAULT_NAMESPACE="admin"
 EOF
 
 source /etc/environment
 
+cat << EOF > /home/ubuntu/roleid
+${tpl_role_id}
+EOF
+
+cat << EOF > /home/ubuntu/secretid
+${tpl_role_secret}
+EOF
 ##--------------------------------------------------------------------
 ## Shortcut script
 ##--------------------------------------------------------------------
@@ -164,13 +172,15 @@ exit_after_auth = true
 pid_file = "./pidfile"
 
 auto_auth {
-   method "aws" {
-       mount_path = "auth/aws"
-       config = {
-           type = "iam"
-           role = "dev-role-iam"
-       }
-   }
+    method {
+        type = "approle"
+        namespace = "admin"
+        config = {
+            role_id_file_path = "/home/ubuntu/roleid"
+            secret_id_file_path = "/home/ubuntu/secretid"
+            remove_secret_id_file_after_reading = false
+        }
+    }
 
    sink "file" {
        config = {
@@ -182,38 +192,62 @@ auto_auth {
 vault {
    address = "http://${tpl_vault_server_addr}:8200"
 }
+
+template {
+  contents = "{{ with secret \"pki_root/issue/test\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }}{{ .Data.certificate }}{{ end }}"
+  destination = "tmp/certs/nginx.crt"
+}
+
+# TLS PRIVATE KEY
+template {
+  contents = "{{ with secret \"pki_root/issue/test\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }} {{ .Data.private_key }}{{ end }}"
+  destination = "tmp/certs/nginx.key"
+}
+
+# TLS CA CERTIFICATE
+template {
+  contents = "{{ with secret \"pki_root/issue/test\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }} {{ .Data.issuing_ca }}{{ end }}"
+  destination = "tmp/certs/ca.crt"
+}
+
+# CERT SERIAL
+template {
+  contents = "{{ with secret \"pki_root/issue/mtls\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }} {{ .Data.serial_number }}{{ end }}"
+  destination = "tmp/certs/serial.info"
+}
+
 EOF
 
 sudo chmod 0775 /home/ubuntu/vault-agent.hcl
 
 
-cat << EOF > /home/ubuntu/vault-agent-wrapped.hcl
-exit_after_auth = true
-pid_file = "./pidfile"
+# cat << EOF > /home/ubuntu/vault-agent-wrapped.hcl
+# exit_after_auth = true
+# pid_file = "./pidfile"
 
-auto_auth {
-   method "aws" {
-       mount_path = "auth/aws"
-       config = {
-           type = "iam"
-           role = "dev-role-iam"
-       }
-   }
+# auto_auth {
+#    method "approle" {
+#        mount_path = "auth/approle"
+#        config = {
+#            type = "iam"
+#            role = "dev-role-iam"
+#        }
+#    }
 
-   sink "file" {
-       wrap_ttl = "5m"
-       config = {
-           path = "/home/ubuntu/vault-token-via-agent"
-       }
-   }
-}
+#    sink "file" {
+#        wrap_ttl = "5m"
+#        config = {
+#            path = "/home/ubuntu/vault-token-via-agent"
+#        }
+#    }
+# }
 
-vault {
-   address = "http://${tpl_vault_server_addr}:8200"
-}
-EOF
+# vault {
+#    address = "http://${tpl_vault_server_addr}:8200"
+# }
+# EOF
 
-sudo chmod 0775 /home/ubuntu/vault-agent-wrapped.hcl
+# sudo chmod 0775 /home/ubuntu/vault-agent-wrapped.hcl
 
 
 logger "Vault Client Complete"

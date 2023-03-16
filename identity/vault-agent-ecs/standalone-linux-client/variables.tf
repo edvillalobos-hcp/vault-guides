@@ -9,6 +9,17 @@ data "terraform_remote_state" "vault-agent-ecs-infra" {
   }
 }
 
+data "terraform_remote_state" "vault-agent-ecs-vault" {
+  backend = "remote"
+
+  config = {
+    organization = "Demo-Org-EV"
+    workspaces = {
+      name = "vault-agent-ecs-vault"
+    }
+  }
+}
+
 # AWS region and AZs in which to deploy
 variable "aws_region" {
   default = "us-east-1"
@@ -52,4 +63,6 @@ locals {
   #hcp_vault_private_endpoint = data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_private_endpoint
   #hcp_vault_namespace       = data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_namespace
   hcp_vault_admin_token   = var.hcp_vault_admin_token == "" ? data.terraform_remote_state.vault-agent-ecs-infra.outputs.hcp_vault_admin_token : var.hcp_vault_admin_token
+  pki_role_id = data.terraform_remote_state.vault-agent-ecs-vault.outputs.pki_role_id
+  pki_secret_id = data.terraform_remote_state.vault-agent-ecs-vault.outputs.pki_secret_id
 }
