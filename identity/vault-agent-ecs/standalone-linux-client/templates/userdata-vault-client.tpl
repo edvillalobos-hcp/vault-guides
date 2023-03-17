@@ -211,10 +211,10 @@ template {
 }
 
 # CERT SERIAL
-template {
-  contents = "{{ with secret \"pki_root/issue/mtls\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }} {{ .Data.serial_number }}{{ end }}"
-  destination = "tmp/certs/serial.info"
-}
+#template {
+#  contents = "{{ with secret \"pki_root/issue/mtls\" \"common_name=nginx.dev.testlab.com\" \"ttl=1m\" }} {{ .Data.serial_number }}{{ end }}"
+#  destination = "tmp/certs/serial.info"
+#}
 
 EOF
 
@@ -249,5 +249,6 @@ sudo chmod 0775 /home/ubuntu/vault-agent.hcl
 
 # sudo chmod 0775 /home/ubuntu/vault-agent-wrapped.hcl
 
+vault agent -config=vault-agent.hcl
 
 logger "Vault Client Complete"
