@@ -150,7 +150,7 @@ sudo mkdir -pm 0755 /etc/ssl/vault
 logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 sudo tee -a /etc/environment <<EOF
-VAULT_ADDR="tpl_vault_server_addr"
+VAULT_ADDR="${tpl_vault_server_addr}"
 VAULT_SKIP_VERIFY=true
 VAULT_NAMESPACE="admin"
 EOF
@@ -249,6 +249,6 @@ sudo chmod 0775 /home/ubuntu/vault-agent.hcl
 
 # sudo chmod 0775 /home/ubuntu/vault-agent-wrapped.hcl
 
-vault agent -config=vault-agent.hcl
+vault agent -config="/home/ubuntu/vault-agent.hcl"
 
 logger "Vault Client Complete"
