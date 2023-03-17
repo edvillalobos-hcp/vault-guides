@@ -85,7 +85,7 @@ elif [[ ! -z $${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp jq
+  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp jq nginx
   sudo systemctl start ntp.service
   sudo systemctl enable ntp.service
   logger "Disable reverse dns lookup in SSH"
@@ -150,7 +150,7 @@ sudo mkdir -pm 0755 /etc/ssl/vault
 logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 sudo tee -a /etc/environment <<EOF
-VAULT_ADDR="http://${tpl_vault_server_addr}:8200"
+VAULT_ADDR="tpl_vault_server_addr"
 VAULT_SKIP_VERIFY=true
 VAULT_NAMESPACE="admin"
 EOF
@@ -190,7 +190,7 @@ auto_auth {
 }
 
 vault {
-   address = "http://${tpl_vault_server_addr}:8200"
+   address = "${tpl_vault_server_addr}"
 }
 
 template {
